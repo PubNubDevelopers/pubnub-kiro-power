@@ -146,22 +146,13 @@ const pubnubServer = mcp?.mcpServers?.pubnub;
 if (!pubnubServer) {
   fail("mcp.json must define mcpServers.pubnub.");
 } else {
-  if (pubnubServer.command !== "npx") {
-    fail('mcp.json pubnub command must be "npx".');
+  if (pubnubServer.url !== "https://mcp.pubnub.com") {
+    fail('mcp.json pubnub url must be "https://mcp.pubnub.com".');
   }
 
-  const expectedArgs = ["-y", "@pubnub/mcp@latest"];
-  if (JSON.stringify(pubnubServer.args) !== JSON.stringify(expectedArgs)) {
-    fail(`mcp.json pubnub args must be ${JSON.stringify(expectedArgs)}.`);
-  }
-
-  const allowedEnv = new Set(["PUBNUB_API_KEY", "PUBNUB_USER_ID"]);
   for (const [key, value] of Object.entries(pubnubServer.env ?? {})) {
-    if (!allowedEnv.has(key)) {
-      fail(`mcp.json env ${key} is not an expected variable.`);
-    }
-    if (value !== `\${${key}}`) {
-      fail(`mcp.json env ${key} must be a placeholder.`);
+    if (typeof value !== "string" || !value.startsWith("${") || !value.endsWith("}")) {
+      fail(`mcp.json env ${key} must not contain a real value.`);
     }
   }
 }

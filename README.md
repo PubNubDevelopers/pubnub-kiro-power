@@ -2,12 +2,12 @@
 
 This Kiro Power helps developers build, debug, and maintain PubNub-powered realtime applications. It focuses on practical workflows for SDK setup, publish and subscribe, chat and presence, App Context, Access Manager, Functions, Events & Actions, safe key handling, and troubleshooting.
 
-The package includes an MCP configuration for the published PubNub MCP server. The MCP server gives Kiro access to PubNub documentation, realtime operations, and account and keyset operations.
+The package connects Kiro to the hosted PubNub MCP server. The MCP server gives Kiro access to PubNub documentation, realtime operations, and account and keyset operations after the user authenticates.
 
 ## Contents
 
 - `POWER.md` defines the Power identity, steering guide routing, and MCP tool usage.
-- `mcp.json` configures PubNub MCP with optional environment-variable placeholders only.
+- `mcp.json` configures the hosted PubNub MCP server.
 - `steering/build-realtime-apps.md` covers minimal app setup and architecture choices.
 - `steering/sdk-usage.md` covers SDK selection and version-aware usage.
 - `steering/chat-and-presence.md` covers message flow, presence, and App Context.
@@ -28,7 +28,21 @@ git diff --check
 
 ## MCP Configuration
 
-`mcp.json` uses the published PubNub MCP package:
+`mcp.json` uses the hosted PubNub MCP server, which is the recommended configuration:
+
+```json
+{
+  "mcpServers": {
+    "pubnub": {
+      "url": "https://mcp.pubnub.com"
+    }
+  }
+}
+```
+
+The hosted server requires no installation and no environment variables. Authentication happens through OAuth, and account, keyset, and realtime operations become available after the user signs in. Publish and subscribe keys are selected dynamically through the `manage_keysets` tool, so the configuration is not tied to a single keyset.
+
+If your environment cannot reach remote MCP servers, run the published package locally instead:
 
 ```json
 {
@@ -45,19 +59,7 @@ git diff --check
 }
 ```
 
-Both variables are optional. `PUBNUB_API_KEY` unlocks account and keyset management operations, and `PUBNUB_USER_ID` identifies the SDK user for local realtime calls. Publish and subscribe keys are not configured here; they are selected dynamically through the `manage_keysets` tool, so the configuration is not tied to a single keyset. Set real values in your shell, local Kiro MCP settings, or another secret store. Never commit real PubNub keys or service integration credentials.
-
-PubNub also offers a hosted MCP server at `https://mcp.pubnub.com` (OAuth authentication, no environment variables) for tools that support remote MCP servers:
-
-```json
-{
-  "mcpServers": {
-    "pubnub": {
-      "url": "https://mcp.pubnub.com"
-    }
-  }
-}
-```
+Both variables are optional. `PUBNUB_API_KEY` unlocks account and keyset management operations for the local server, and `PUBNUB_USER_ID` identifies the SDK user for local realtime calls. Set real values in your shell, local Kiro MCP settings, or another secret store. Never commit real PubNub keys or service integration credentials.
 
 When Kiro installs this Power, it namespaces the included MCP server as `power-pubnub-kiro-power-pubnub`. Inside the Power activation response, the server is still presented as `pubnub`.
 
