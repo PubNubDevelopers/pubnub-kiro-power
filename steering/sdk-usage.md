@@ -13,7 +13,7 @@ Use this guidance when choosing a PubNub SDK, updating an existing integration, 
 - Ask for the target language, runtime, package manager, and existing SDK version.
 - If the user is migrating, check the relevant migration guide before changing method names or configuration.
 - Keep examples compatible with the selected SDK family.
-- Prefer official PubNub docs or PubNub MCP resources for current syntax.
+- Prefer official PubNub docs or PubNub MCP resources like get_sdk_documentation / get_chat_sdk_documentation for current syntax.
 
 ## Implementation Pattern
 

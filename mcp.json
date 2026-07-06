@@ -1,14 +1,7 @@
 {
   "mcpServers": {
     "pubnub": {
-      "command": "npx",
-      "args": ["-y", "@pubnub/mcp@latest"],
-      "env": {
-        "PUBNUB_API_KEY": "${PUBNUB_API_KEY}",
-        "PUBNUB_PUBLISH_KEY": "${PUBNUB_PUBLISH_KEY}",
-        "PUBNUB_SUBSCRIBE_KEY": "${PUBNUB_SUBSCRIBE_KEY}",
-        "PUBNUB_USER_ID": "${PUBNUB_USER_ID}"
-      }
+      "url": "https://mcp.pubnub.com"
     }
   }
 }

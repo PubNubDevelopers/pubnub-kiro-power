@@ -12,6 +12,8 @@ Use this guidance when a user asks for a new PubNub-powered app, prototype, tuto
 
 ## Minimal JavaScript Shape
 
+This example targets Node.js; `process.env` does not exist in browsers, so browser samples need keys injected at build time or entered at runtime.
+
 ```js
 import PubNub from "pubnub";
 
@@ -23,16 +25,35 @@ const pubnub = new PubNub({
 
 const channel = "hello-pubnub";
 
-const subscription = pubnub.channel(channel).subscription();
-subscription.onMessage = event => {
-  console.log("message", event.message);
-};
-subscription.subscribe();
+// Wait for the subscription to connect before publishing, then keep the
+// process alive until the published message loops back.
+const connected = new Promise(resolve => {
+  pubnub.addListener({
+    status: event => {
+      if (event.category === "PNConnectedCategory") {
+        resolve();
+      }
+    },
+  });
+});
 
+const received = new Promise(resolve => {
+  const subscription = pubnub.channel(channel).subscription();
+  subscription.onMessage = event => {
+    console.log("message", event.message);
+    resolve(event.message);
+  };
+  subscription.subscribe();
+});
+
+await connected;
 await pubnub.publish({
   channel,
   message: { text: "Hello from PubNub" },
 });
+
+await received;
+pubnub.unsubscribeAll();
 ```
 
 ## Architecture Notes

@@ -88,6 +88,50 @@ if (!match) {
   if (!frontmatter.includes('author: "PubNub"')) {
     fail('POWER.md author must be "PubNub".');
   }
+
+  const requiredKeywords = ["pubnub", "realtime", "publish", "subscribe", "pubsub"];
+  for (const keyword of requiredKeywords) {
+    if (!frontmatter.includes(`- ${keyword}`)) {
+      fail(`POWER.md keywords must include ${keyword}.`);
+    }
+  }
+}
+
+const powerBody = power.slice(match ? match[0].length : 0);
+
+for (const steeringFile of steeringFiles) {
+  if (!powerBody.includes(steeringFile)) {
+    fail(`POWER.md must reference ${steeringFile}.`);
+  }
+}
+
+const requiredToolMentions = [
+  "write_pubnub_app",
+  "get_sdk_documentation",
+  "get_chat_sdk_documentation",
+  "how_to",
+  "manage_apps",
+  "manage_keysets",
+  "send_pubnub_message",
+  "subscribe_and_receive_pubnub_messages",
+  "get_pubnub_messages",
+  "get_pubnub_presence",
+  "manage_app_context",
+];
+for (const tool of requiredToolMentions) {
+  if (!powerBody.includes(tool)) {
+    fail(`POWER.md must describe the ${tool} MCP tool.`);
+  }
+}
+
+const requiredLinks = [
+  "https://www.pubnub.com/trust/legal/privacy-policy/",
+  "https://support.pubnub.com/hc/en-us",
+];
+for (const link of requiredLinks) {
+  if (!powerBody.includes(link)) {
+    fail(`POWER.md must link to ${link}.`);
+  }
 }
 
 const readme = await readText("README.md");
@@ -102,27 +146,8 @@ const pubnubServer = mcp?.mcpServers?.pubnub;
 if (!pubnubServer) {
   fail("mcp.json must define mcpServers.pubnub.");
 } else {
-  if (pubnubServer.command !== "npx") {
-    fail('mcp.json pubnub command must be "npx".');
-  }
-
-  const expectedArgs = ["-y", "@pubnub/mcp@latest"];
-  if (JSON.stringify(pubnubServer.args) !== JSON.stringify(expectedArgs)) {
-    fail(`mcp.json pubnub args must be ${JSON.stringify(expectedArgs)}.`);
-  }
-
-  const expectedEnv = [
-    "PUBNUB_API_KEY",
-    "PUBNUB_PUBLISH_KEY",
-    "PUBNUB_SUBSCRIBE_KEY",
-    "PUBNUB_USER_ID",
-  ];
-
-  for (const key of expectedEnv) {
-    const value = pubnubServer.env?.[key];
-    if (value !== `\${${key}}`) {
-      fail(`mcp.json env ${key} must be a placeholder.`);
-    }
+  if (pubnubServer.url !== "https://mcp.pubnub.com") {
+    fail('mcp.json pubnub url must be "https://mcp.pubnub.com".');
   }
 
   for (const [key, value] of Object.entries(pubnubServer.env ?? {})) {
