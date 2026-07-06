@@ -51,14 +51,15 @@ If your environment cannot reach remote MCP servers, run the published package l
       "command": "npx",
       "args": ["-y", "@pubnub/mcp@latest"],
       "env": {
-        "PUBNUB_API_KEY": "${PUBNUB_API_KEY}"
+        "PUBNUB_API_KEY": "${PUBNUB_API_KEY}",
+        "PUBNUB_USER_ID": "${PUBNUB_USER_ID}"
       }
     }
   }
 }
 ```
 
-`PUBNUB_API_KEY` is optional and unlocks account and keyset management operations for the local server. Set real values in your shell, local Kiro MCP settings, or another secret store. Never commit real PubNub keys or service integration credentials.
+Both variables are optional. `PUBNUB_API_KEY` unlocks account and keyset management operations for the local server, and `PUBNUB_USER_ID` identifies the SDK user for local realtime calls. Set real values in your shell, local Kiro MCP settings, or another secret store. Never commit real PubNub keys or service integration credentials.
 
 When Kiro installs this Power, it namespaces the included MCP server as `power-pubnub-kiro-power-pubnub`. Inside the Power activation response, the server is still presented as `pubnub`.
 
