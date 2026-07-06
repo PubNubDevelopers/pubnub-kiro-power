@@ -1,7 +1,12 @@
 {
   "mcpServers": {
     "pubnub": {
-      "url": "https://mcp.pubnub.com"
+      "command": "npx",
+      "args": ["-y", "@pubnub/mcp@latest"],
+      "env": {
+        "PUBNUB_API_KEY": "${PUBNUB_API_KEY}",
+        "PUBNUB_USER_ID": "${PUBNUB_USER_ID}"
+      }
     }
   }
 }
