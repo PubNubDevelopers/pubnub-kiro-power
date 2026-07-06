@@ -1,0 +1,11 @@
+{
+  "name": "pubnub-kiro-power",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Kiro Power for PubNub realtime application development.",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/validate-power.mjs"
+  }
+}
